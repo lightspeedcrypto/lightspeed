@@ -1,16 +1,16 @@
-#ifndef LIGHTSPEEDGUI_H
-#define LIGHTSPEEDGUI_H
+#ifndef lightspeedGUI_H
+#define lightspeedGUI_H
 
 #include <QMainWindow>
 #include <QSystemTrayIcon>
+
+#include <QScopedPointer>
 
 class TransactionTableModel;
 class ClientModel;
 class WalletModel;
 class TransactionView;
 class OverviewPage;
-class StatisticsPage;
-class BlockBrowser;
 class AddressBookPage;
 class SendCoinsDialog;
 class SignVerifyMessageDialog;
@@ -29,7 +29,7 @@ class QUrl;
 QT_END_NAMESPACE
 
 /**
-  Bitcoin GUI main class. This class represents the main window of the Bitcoin UI. It communicates with both the client and
+  lightspeed GUI main class. This class represents the main window of the lightspeed UI. It communicates with both the client and
   wallet models to give the user an up-to-date view of the current core state.
 */
 class lightspeedGUI : public QMainWindow
@@ -44,7 +44,7 @@ public:
     */
     void setClientModel(ClientModel *clientModel);
     /** Set the wallet model.
-        The wallet model represents a bitcoin wallet, and offers access to the list of transactions, address book and sending
+        The wallet model represents a lightspeed wallet, and offers access to the list of transactions, address book and sending
         functionality.
     */
     void setWalletModel(WalletModel *walletModel);
@@ -62,13 +62,11 @@ private:
     QStackedWidget *centralWidget;
 
     OverviewPage *overviewPage;
-    StatisticsPage *statisticsPage;
-	BlockBrowser *blockBrowser;
     QWidget *transactionsPage;
     AddressBookPage *addressBookPage;
     AddressBookPage *receiveCoinsPage;
     SendCoinsDialog *sendCoinsPage;
-    SignVerifyMessageDialog *signVerifyMessageDialog;
+    QScopedPointer<SignVerifyMessageDialog> signVerifyMessageDialog;
 
     QLabel *labelEncryptionIcon;
     QLabel *labelStakingIcon;
@@ -79,8 +77,6 @@ private:
 
     QMenuBar *appMenuBar;
     QAction *overviewAction;
-    QAction *statisticsAction;
-	QAction *blockAction;
     QAction *historyAction;
     QAction *quitAction;
     QAction *sendCoinsAction;
@@ -103,7 +99,7 @@ private:
     QSystemTrayIcon *trayIcon;
     Notificator *notificator;
     TransactionView *transactionView;
-    RPCConsole *rpcConsole;
+    QScopedPointer<RPCConsole> rpcConsole;
 
     QMovie *syncIconMovie;
 
@@ -143,10 +139,6 @@ public slots:
 private slots:
     /** Switch to overview (home) page */
     void gotoOverviewPage();
-    /** Switch to statistics page*/
-    void gotoStatisticsPage();
-	/** Switch to block explorer*/
-    void gotoBlockBrowser();
     /** Switch to history (transactions) page */
     void gotoHistoryPage();
     /** Switch to address book page */
@@ -163,7 +155,6 @@ private slots:
 
     /** Show configuration dialog */
     void optionsClicked();
- 
     /** Show about dialog */
     void aboutClicked();
 #ifndef Q_OS_MAC
